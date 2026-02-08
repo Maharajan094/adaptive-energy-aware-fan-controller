@@ -1,0 +1,45 @@
+TEMP_HISTORY_SIZE = 3
+temperature_history = []
+
+def detect_trend(history):
+    if len(history) < TEMP_HISTORY_SIZE:
+        return "STABLE"
+
+    if history[-1] > history[0]:
+        return "RISING"
+    elif history[-1] < history[0]:
+        return "FALLING"
+    else:
+        return "STABLE"
+
+def fan_speed_control(temp):
+    if temp < 26:
+        return "FAN OFF"
+    elif temp < 30:
+        return "FAN LOW"
+    elif temp < 34:
+        return "FAN MEDIUM"
+    else:
+        return "FAN HIGH"
+
+print("ADAPTIVE ENERGY-AWARE FAN CONTROLLER")
+print("-----------------------------------")
+
+while True:
+    temp = float(input("\nEnter temperature (°C): "))
+    temperature_history.append(temp)
+
+    if len(temperature_history) > TEMP_HISTORY_SIZE:
+        temperature_history.pop(0)
+
+    trend = detect_trend(temperature_history)
+    fan_status = fan_speed_control(temp)
+
+    print("Temperature History:", temperature_history)
+    print("Thermal Trend:", trend)
+    print("Fan Status:", fan_status)
+
+    choice = input("\nContinue? (yes/no): ")
+    if choice.lower() != "yes":
+        print("System stopped.")
+        break
